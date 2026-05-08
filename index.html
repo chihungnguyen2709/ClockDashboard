@@ -81,7 +81,7 @@
             <!-- Widget 1: Danh sách Tập trung -->
             <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all relative">
                 <div class="flex justify-between items-center mb-4 text-gray-100">
-                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Danh sách tập trung</h3>
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Lời Nhắc</h3>
                     <button id="addTaskBtn" class="text-gray-400 hover:text-white transition-colors bg-white/10 p-1 rounded-md"><i class="fas fa-plus"></i></button>
                 </div>
                 <div class="flex-grow overflow-y-auto no-scrollbar relative">
@@ -96,7 +96,7 @@
 
             <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all">
                 <div class="flex justify-between items-center mb-4 text-gray-100">
-                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Lịch tháng</h3>
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Lịch</h3>
                 </div>
                 <div class="flex-grow overflow-y-auto no-scrollbar relative">
                     <div class="flex flex-col h-full">
@@ -117,7 +117,7 @@
 
             <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all">
                 <div class="flex justify-between items-center mb-4 text-gray-100">
-                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Ghi chú hàng ngày</h3>
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Daily Notes</h3>
                 </div>
                 <div class="flex-grow overflow-y-auto no-scrollbar relative">
                     <textarea id="dailyNote" class="w-full h-full bg-transparent resize-none outline-none text-sm text-gray-200 placeholder-gray-500 no-scrollbar leading-relaxed" placeholder="Bạn đang nghĩ gì? Hãy ghi lại những ý tưởng trong ngày vào đây..."></textarea>
@@ -126,7 +126,7 @@
 
             <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all">
                 <div class="flex justify-between items-center mb-4 text-gray-100">
-                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Âm thanh thư giãn</h3>
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Khung Nhạc</h3>
                     <button id="toggleYoutubeInputBtn" class="text-gray-400 hover:text-white transition-colors bg-white/10 p-1.5 rounded-md" title="Thay đổi video YouTube">
                         <i class="fab fa-youtube"></i>
                     </button>
@@ -148,7 +148,7 @@
 
             <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all">
                 <div class="flex justify-between items-center mb-4 text-gray-100">
-                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Khung ảnh cá nhân</h3>
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Frame ảnh cá nhân</h3>
                 </div>
                 <div class="flex-grow relative h-full">
                     <!-- Khu vực đã có ảnh -->
@@ -165,8 +165,8 @@
                         <div class="bg-white/5 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform">
                             <i class="fas fa-upload text-xl"></i>
                         </div>
-                        <span class="text-sm font-medium">Nhấn để tải ảnh lên</span>
-                        <span class="text-xs text-gray-500 mt-1">Hỗ trợ JPG, PNG</span>
+                        <span class="text-sm font-medium">Tải ảnh lên tại đây nhé.</span>
+                        <span class="text-xs text-gray-500 mt-1">Hỗ trợ JPG và PNG</span>
                         <input id="photoInput" type="file" accept="image/*" class="hidden">
                     </label>
                 </div>
@@ -177,16 +177,16 @@
 
     <footer class="relative z-10 w-full px-6 py-6 bg-black/60 border-t border-white/5 text-white flex flex-col sm:flex-row justify-between items-center mt-auto">
         <div class="text-sm text-gray-400 font-medium tracking-wide mb-4 sm:mb-0">
-            &copy; <span id="copyrightYear"></span> Bản quyền thuộc về Bạn. Đã đăng ký bản quyền.
+            &copy; <span id="copyrightYear"></span> Made by youngCHN with love <3. Feel free to copied.
         </div>
         <div class="flex items-center gap-6 text-xl">
-            <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-blue-500 transition-all hover:scale-110" aria-label="Facebook">
+            <a href="https://www.facebook.com/chihungnguyen2644" target="_blank" class="text-gray-400 hover:text-blue-500 transition-all hover:scale-110" aria-label="Facebook">
                 <i class="fab fa-facebook"></i>
             </a>
-            <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-pink-500 transition-all hover:scale-110" aria-label="Instagram">
+            <a href="https://instagram.com/nch.hungg" target="_blank" class="text-gray-400 hover:text-pink-500 transition-all hover:scale-110" aria-label="Instagram">
                 <i class="fab fa-instagram"></i>
             </a>
-            <a href="mailto:example@gmail.com" class="text-gray-400 hover:text-white transition-all hover:scale-110" aria-label="Email">
+            <a href="mailto:nch.hungg@gmail.com" class="text-gray-400 hover:text-white transition-all hover:scale-110" aria-label="Email">
                 <i class="fas fa-envelope"></i>
             </a>
         </div>
