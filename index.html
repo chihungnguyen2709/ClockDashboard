@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clock Dashboard</title>
+    
+    <!-- Tải Tailwind CSS qua CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Cấu hình màu tùy chỉnh cho Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 900: '#0f172a' },
+                        blue: { 200: '#bfdbfe', 400: '#60a5fa', 500: '#3b82f6' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Tải FontAwesome cho các Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen bg-slate-900 text-white font-sans overflow-x-hidden bg-cover bg-center bg-fixed relative flex flex-col" 
+      style="background-image: url('https://images.unsplash.com/photo-1506744012022-28dce3410f40?q=80&w=2070&auto=format&fit=crop')">
+    
+    <!-- Lớp phủ làm tối hình nền -->
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm z-0"></div>
+
+    <!-- Container Nội dung Chính -->
+    <main class="relative z-10 flex-grow max-w-7xl mx-auto px-6 py-10 w-full flex flex-col">
+        
+        <div class="flex flex-col items-center text-center mt-4 space-y-4 w-full">
+            <div id="dateDisplay" class="text-lg sm:text-xl font-medium tracking-[0.2em] text-gray-200 drop-shadow-md">
+                ĐANG TẢI...
+            </div>
+            
+            <div class="flex items-center gap-3 bg-black/40 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/10 w-full max-w-md shadow-lg">
+                <span id="yearLabel" class="text-[10px] sm:text-xs font-semibold tracking-widest text-gray-300 uppercase whitespace-nowrap">
+                    NĂM
+                </span>
+                <div class="flex-grow h-1.5 bg-gray-700/50 rounded-full overflow-hidden">
+                    <div id="progressBar" class="h-full bg-blue-400 rounded-full relative transition-all duration-1000 ease-in-out" style="width: 0%">
+                        <div class="absolute top-0 right-0 bottom-0 w-4 bg-white/30 blur-[2px]"></div>
+                    </div>
+                </div>
+                <span id="progressText" class="text-xs font-bold text-blue-200 w-12 text-right whitespace-nowrap">
+                    0.0%
+                </span>
+            </div>
+        </div>
+
+        <div class="flex justify-center items-center gap-3 sm:gap-6 text-center my-10 sm:my-16">
+            <div class="flex flex-col items-center w-24 sm:w-36">
+                <span id="hoursDisplay" class="text-7xl sm:text-9xl font-light tracking-tighter drop-shadow-lg">00</span>
+                <span class="text-[10px] sm:text-xs uppercase tracking-[0.3em] mt-3 text-gray-400 font-semibold">Giờ</span>
+            </div>
+            <span class="text-5xl sm:text-7xl font-light mb-8 sm:mb-10 text-gray-500 opacity-50">:</span>
+            <div class="flex flex-col items-center w-24 sm:w-36">
+                <span id="minutesDisplay" class="text-7xl sm:text-9xl font-light tracking-tighter drop-shadow-lg">00</span>
+                <span class="text-[10px] sm:text-xs uppercase tracking-[0.3em] mt-3 text-gray-400 font-semibold">Phút</span>
+            </div>
+            <span class="text-5xl sm:text-7xl font-light mb-8 sm:mb-10 text-gray-500 opacity-50">:</span>
+            <div class="flex flex-col items-center w-24 sm:w-36">
+                <span id="secondsDisplay" class="text-7xl sm:text-9xl font-light tracking-tighter drop-shadow-lg">00</span>
+                <span class="text-[10px] sm:text-xs uppercase tracking-[0.3em] mt-3 text-gray-400 font-semibold">Giây</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4 w-full mb-10">
+            
+            <!-- Widget 1: Danh sách Tập trung -->
+            <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all relative">
+                <div class="flex justify-between items-center mb-4 text-gray-100">
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Danh sách tập trung</h3>
+                    <button id="addTaskBtn" class="text-gray-400 hover:text-white transition-colors bg-white/10 p-1 rounded-md"><i class="fas fa-plus"></i></button>
+                </div>
+                <div class="flex-grow overflow-y-auto no-scrollbar relative">
+                    <ul id="taskList" class="space-y-2 mb-12">
+                        <!-- Danh sách công việc sẽ được chèn vào đây bằng JS -->
+                    </ul>
+                </div>
+                <div class="absolute bottom-5 left-5 right-5 bg-gradient-to-t from-[#151921] to-transparent pt-6">
+                    <input id="taskInput" type="text" placeholder="Thêm nhiệm vụ mới..." class="w-full bg-white/10 border border-white/10 rounded-lg text-sm p-3 outline-none focus:border-blue-400/50 focus:bg-white/15 text-white placeholder-gray-400 transition-all">
+                </div>
+            </div>
+
+            <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all">
+                <div class="flex justify-between items-center mb-4 text-gray-100">
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Lịch tháng</h3>
+                </div>
+                <div class="flex-grow overflow-y-auto no-scrollbar relative">
+                    <div class="flex flex-col h-full">
+                        <div class="flex justify-between items-center mb-4">
+                            <button id="prevMonthBtn" class="hover:text-white text-gray-400 transition-colors"><i class="fas fa-chevron-left"></i></button>
+                            <span id="monthYearDisplay" class="text-sm font-semibold tracking-wider text-gray-100"></span>
+                            <button id="nextMonthBtn" class="hover:text-white text-gray-400 transition-colors"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center text-xs text-gray-400 mb-2 font-medium">
+                            <div>CN</div><div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div>
+                        </div>
+                        <div id="calendarGrid" class="grid grid-cols-7 gap-y-2 gap-x-1 text-center text-sm">
+                            <!-- Các ngày sẽ được tạo bằng JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all">
+                <div class="flex justify-between items-center mb-4 text-gray-100">
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Ghi chú hàng ngày</h3>
+                </div>
+                <div class="flex-grow overflow-y-auto no-scrollbar relative">
+                    <textarea id="dailyNote" class="w-full h-full bg-transparent resize-none outline-none text-sm text-gray-200 placeholder-gray-500 no-scrollbar leading-relaxed" placeholder="Bạn đang nghĩ gì? Hãy ghi lại những ý tưởng trong ngày vào đây..."></textarea>
+                </div>
+            </div>
+
+            <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all">
+                <div class="flex justify-between items-center mb-4 text-gray-100">
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Âm thanh thư giãn</h3>
+                    <button id="toggleYoutubeInputBtn" class="text-gray-400 hover:text-white transition-colors bg-white/10 p-1.5 rounded-md" title="Thay đổi video YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </button>
+                </div>
+                <div class="flex-grow overflow-hidden relative rounded-xl border border-white/5 group">
+                    <!-- Khung nhập Link ẩn/hiện -->
+                    <div id="youtubeInputContainer" class="hidden absolute top-0 left-0 right-0 z-20 bg-black/80 backdrop-blur-md p-3 border-b border-white/10 flex gap-2 items-center">
+                        <input id="youtubeInput" type="text" placeholder="Dán link Youtube & Enter..." class="w-full bg-white/10 border border-white/20 rounded text-xs p-2 outline-none focus:border-blue-400 text-white placeholder-gray-400">
+                        <button id="closeYoutubeInputBtn" class="text-gray-400 hover:text-white transition-colors"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <iframe id="youtubeIframe" width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&controls=1&loop=1&playlist=jfKfPfyJRdk" title="Lofi Radio" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" class="w-full h-full object-cover relative z-10"></iframe>
+                    
+                    <div class="absolute top-2 right-2 bg-black/60 text-[10px] px-2 py-1 rounded text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none backdrop-blur-md z-10">
+                        Bật tiếng trên video
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-black/30 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col h-72 shadow-2xl hover:border-white/20 transition-all">
+                <div class="flex justify-between items-center mb-4 text-gray-100">
+                    <h3 class="font-semibold tracking-wider text-xs uppercase text-gray-300">Khung ảnh cá nhân</h3>
+                </div>
+                <div class="flex-grow relative h-full">
+                    <!-- Khu vực đã có ảnh -->
+                    <div id="photoContainer" class="hidden relative w-full h-full group rounded-xl overflow-hidden border border-white/5">
+                        <img id="uploadedPhoto" src="" alt="Personal Frame" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
+                            <button id="removePhotoBtn" class="bg-red-500/80 hover:bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all transform translate-y-2 group-hover:translate-y-0">
+                                Xóa ảnh
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Khu vực tải ảnh lên -->
+                    <label id="uploadLabel" class="w-full h-full border-2 border-dashed border-gray-600 hover:border-blue-400/50 bg-white/5 hover:bg-blue-400/10 rounded-xl flex flex-col items-center justify-center cursor-pointer transition-all text-gray-400 hover:text-blue-200 group">
+                        <div class="bg-white/5 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-upload text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium">Nhấn để tải ảnh lên</span>
+                        <span class="text-xs text-gray-500 mt-1">Hỗ trợ JPG, PNG</span>
+                        <input id="photoInput" type="file" accept="image/*" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="relative z-10 w-full px-6 py-6 bg-black/60 border-t border-white/5 text-white flex flex-col sm:flex-row justify-between items-center mt-auto">
+        <div class="text-sm text-gray-400 font-medium tracking-wide mb-4 sm:mb-0">
+            &copy; <span id="copyrightYear"></span> Bản quyền thuộc về Bạn. Đã đăng ký bản quyền.
+        </div>
+        <div class="flex items-center gap-6 text-xl">
+            <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-blue-500 transition-all hover:scale-110" aria-label="Facebook">
+                <i class="fab fa-facebook"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-pink-500 transition-all hover:scale-110" aria-label="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="mailto:example@gmail.com" class="text-gray-400 hover:text-white transition-all hover:scale-110" aria-label="Email">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. Xử lý Đồng hồ và Ngày tháng ---
+        function updateClockAndDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            
+            // Cập nhật Footer Year
+            document.getElementById('copyrightYear').innerText = year;
+            document.getElementById('yearLabel').innerText = `NĂM ${year}`;
+
+            // Định dạng giờ
+            const padZero = (num) => num.toString().padStart(2, '0');
+            document.getElementById('hoursDisplay').innerText = padZero(now.getHours());
+            document.getElementById('minutesDisplay').innerText = padZero(now.getMinutes());
+            document.getElementById('secondsDisplay').innerText = padZero(now.getSeconds());
+
+            // Định dạng ngày tháng
+            const daysOfWeek = ['CHỦ NHẬT', 'THỨ HAI', 'THỨ BA', 'THỨ TƯ', 'THỨ NĂM', 'THỨ SÁU', 'THỨ BẢY'];
+            const dateStr = `${daysOfWeek[now.getDay()]}, ${now.getDate()} THÁNG ${now.getMonth() + 1}, ${year}`;
+            document.getElementById('dateDisplay').innerText = dateStr;
+
+            // Tính Tiến độ năm
+            const start = new Date(year, 0, 1);
+            const end = new Date(year + 1, 0, 1);
+            const progress = ((now - start) / (end - start)) * 100;
+            
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            document.getElementById('progressText').innerText = `${progress.toFixed(1)}%`;
+        }
+
+        setInterval(updateClockAndDate, 1000);
+        updateClockAndDate(); // Chạy ngay lập tức khi tải trang
+
+        // --- 2. Xử lý Danh sách Tập trung ---
+        let tasks = [
+            { id: 1, text: 'Làm việc sâu', done: false },
+            { id: 2, text: 'Đọc sách 30 phút', done: true }
+        ];
+
+        const taskListEl = document.getElementById('taskList');
+        const taskInputEl = document.getElementById('taskInput');
+
+        function renderTasks() {
+            taskListEl.innerHTML = '';
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.className = "flex justify-between items-center group bg-white/5 hover:bg-white/10 rounded-xl p-3 transition-colors border border-transparent hover:border-white/5";
+                
+                const doneClass = task.done ? 'bg-blue-500 border-blue-500' : 'border-gray-500 hover:border-gray-300';
+                const textClass = task.done ? 'line-through text-gray-500' : 'text-gray-200';
+                const checkIcon = task.done ? '<i class="fas fa-check text-[10px] text-white"></i>' : '';
+
+                li.innerHTML = `
+                    <div class="flex items-center gap-3 cursor-pointer" onclick="toggleTask(${task.id})">
+                        <button class="w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${doneClass}">
+                            ${checkIcon}
+                        </button>
+                        <span class="text-sm transition-all duration-300 ${textClass}">${task.text}</span>
+                    </div>
+                    <button onclick="removeTask(${task.id})" class="text-gray-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                taskListEl.appendChild(li);
+            });
+        }
+
+        function addTask() {
+            const text = taskInputEl.value.trim();
+            if (text === '') return;
+            tasks.push({ id: Date.now(), text: text, done: false });
+            taskInputEl.value = '';
+            renderTasks();
+        }
+
+        function removeTask(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            renderTasks();
+        }
+
+        function toggleTask(id) {
+            tasks = tasks.map(t => t.id === id ? { ...t, done: !t.done } : t);
+            renderTasks();
+        }
+
+        document.getElementById('addTaskBtn').addEventListener('click', addTask);
+        taskInputEl.addEventListener('keypress', (e) => { if (e.key === 'Enter') addTask(); });
+        renderTasks();
+
+        // --- 3. Xử lý Lịch Tháng ---
+        let currentMonthDate = new Date();
+
+        function renderCalendar() {
+            const year = currentMonthDate.getFullYear();
+            const month = currentMonthDate.getMonth();
+            const monthNames = ['THÁNG 1', 'THÁNG 2', 'THÁNG 3', 'THÁNG 4', 'THÁNG 5', 'THÁNG 6', 'THÁNG 7', 'THÁNG 8', 'THÁNG 9', 'THÁNG 10', 'THÁNG 11', 'THÁNG 12'];
+            
+            document.getElementById('monthYearDisplay').innerText = `${monthNames[month]} ${year}`;
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+
+            const calendarGrid = document.getElementById('calendarGrid');
+            calendarGrid.innerHTML = '';
+
+            // Render khoảng trống đầu tháng
+            for (let i = 0; i < firstDay; i++) {
+                calendarGrid.innerHTML += `<div></div>`;
+            }
+
+            // Render các ngày
+            for (let d = 1; d <= daysInMonth; d++) {
+                const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                const cssClass = isToday 
+                    ? "py-1 rounded-md transition-colors bg-blue-500 text-white font-bold shadow-md shadow-blue-500/20" 
+                    : "py-1 rounded-md transition-colors hover:bg-white/20 cursor-default text-gray-200";
+                
+                calendarGrid.innerHTML += `<div class="${cssClass}">${d}</div>`;
+            }
+        }
+
+        document.getElementById('prevMonthBtn').addEventListener('click', () => {
+            currentMonthDate.setMonth(currentMonthDate.getMonth() - 1);
+            renderCalendar();
+        });
+        
+        document.getElementById('nextMonthBtn').addEventListener('click', () => {
+            currentMonthDate.setMonth(currentMonthDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        renderCalendar();
+
+        // --- 4. Xử lý Khung Ảnh Cá Nhân ---
+        const photoInput = document.getElementById('photoInput');
+        const uploadedPhoto = document.getElementById('uploadedPhoto');
+        const photoContainer = document.getElementById('photoContainer');
+        const uploadLabel = document.getElementById('uploadLabel');
+
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    uploadedPhoto.src = event.target.result;
+                    photoContainer.classList.remove('hidden');
+                    uploadLabel.classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('removePhotoBtn').addEventListener('click', () => {
+            photoInput.value = '';
+            uploadedPhoto.src = '';
+            photoContainer.classList.add('hidden');
+            uploadLabel.classList.remove('hidden');
+        });
+
+        // --- 5. Xử lý Trình tải Nhạc Youtube ---
+        const toggleYoutubeBtn = document.getElementById('toggleYoutubeInputBtn');
+        const closeYoutubeBtn = document.getElementById('closeYoutubeInputBtn');
+        const youtubeContainer = document.getElementById('youtubeInputContainer');
+        const youtubeInput = document.getElementById('youtubeInput');
+        const youtubeIframe = document.getElementById('youtubeIframe');
+
+        toggleYoutubeBtn.addEventListener('click', () => {
+            youtubeContainer.classList.toggle('hidden');
+            if(!youtubeContainer.classList.contains('hidden')) youtubeInput.focus();
+        });
+
+        closeYoutubeBtn.addEventListener('click', () => {
+            youtubeContainer.classList.add('hidden');
+        });
+
+        youtubeInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const url = youtubeInput.value;
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                const match = url.match(regExp);
+                
+                if (match && match[2].length == 11) {
+                    const videoId = match[2];
+                    youtubeIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=1&loop=1&playlist=${videoId}`;
+                }
+                youtubeContainer.classList.add('hidden');
+                youtubeInput.value = '';
+            }
+        });
+
+        // --- 6. Xử lý Ghi chú (Lưu tạm vào biến, nếu muốn lưu vĩnh viễn cần LocalStorage) ---
+        const noteArea = document.getElementById('dailyNote');
+        noteArea.addEventListener('input', (e) => {
+            // Có thể mở rộng để lưu vào localStorage tại đây
+        });
+
+    </script>
+</body>
+</html>
